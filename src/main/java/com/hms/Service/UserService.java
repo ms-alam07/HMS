@@ -1,8 +1,10 @@
 package com.hms.Service;
 
 import com.hms.Entity.User;
+import com.hms.Payload.LoginDto;
 import com.hms.Payload.UserDto;
 import com.hms.Repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,6 +26,7 @@ public class UserService {
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setMobile(userDto.getMobile());
+        user.setPassword(BCrypt.hashpw(userDto.getPassword(),BCrypt.gensalt(10))); // Use BCryptPasswordEncoder
         return user;
     }
     UserDto mapToDto(User user){
@@ -60,4 +63,14 @@ public class UserService {
     }
 
 
+    public boolean verifyLogin(LoginDto loginDto) {
+        Optional<User> opUser = userRepository.findByUsername(loginDto.getUsername());
+        if(opUser.isPresent()) {
+            User user = opUser.get();
+            if(BCrypt.checkpw(loginDto.getPassword(),user.getPassword())){
+                return true;
+            }
+        }
+        return false;
+    }
 }
