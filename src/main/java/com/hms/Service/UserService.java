@@ -4,6 +4,8 @@ import com.hms.Entity.User;
 import com.hms.Payload.LoginDto;
 import com.hms.Payload.UserDto;
 import com.hms.Repository.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,11 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
+    private JWTService jwtService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,JWTService jwtService) {
+        this.jwtService=jwtService;
         this.userRepository = userRepository;
     }
 
@@ -63,14 +67,15 @@ public class UserService {
     }
 
 
-    public boolean verifyLogin(LoginDto loginDto) {
+    public String verifyLogin(LoginDto loginDto) {
         Optional<User> opUser = userRepository.findByUsername(loginDto.getUsername());
         if(opUser.isPresent()) {
             User user = opUser.get();
             if(BCrypt.checkpw(loginDto.getPassword(),user.getPassword())){
-                return true;
+                String token = jwtService.genrateToken(user.getUsername());
+                return token;
             }
         }
-        return false;
+         return null;
     }
 }

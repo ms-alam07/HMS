@@ -28,11 +28,11 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String loginUser(@RequestBody LoginDto loginDto) {
-        boolean val = userService.verifyLogin(loginDto);
-        if(val){
-            return "Login Successful";
+    public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto) {
+        String token = userService.verifyLogin(loginDto);
+        if(token != null){
+            return new ResponseEntity<>(token,HttpStatus.OK);
         }
-        return "Invalid Credentials";
+        return new ResponseEntity<>("Invalid Credentials",HttpStatus.BAD_REQUEST);
     }
 }
