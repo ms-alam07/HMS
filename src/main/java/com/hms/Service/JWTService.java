@@ -27,12 +27,13 @@ public class JWTService {
 //        System.out.println(issuer);
 //        System.out.println(expiry);
     }
-    public String genrateToken(String username){
-         return JWT.create().
-                withClaim("name",username).
-                withExpiresAt(new Date(System.currentTimeMillis()+expiry)).
-                withIssuer(issuer).
-                sign(algorithm);
+    public String genrateToken(String username) {
+        long expirationDuration = Long.parseLong(expiry);
+        Date expirationTime = new Date(System.currentTimeMillis() + expirationDuration);
+        return JWT.create()
+                .withClaim("name", username)
+                .withExpiresAt(expirationTime)  // Set correct expiration time
+                .withIssuer(issuer)
+                .sign(algorithm);
     }
-
 }

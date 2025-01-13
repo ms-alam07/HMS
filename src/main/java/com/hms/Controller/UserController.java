@@ -1,5 +1,6 @@
 package com.hms.Controller;
 
+import com.hms.Payload.JwtToken;
 import com.hms.Payload.LoginDto;
 import com.hms.Payload.UserDto;
 import com.hms.Service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -30,8 +32,11 @@ public class UserController {
     @GetMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto) {
         String token = userService.verifyLogin(loginDto);
-        if(token != null){
-            return new ResponseEntity<>(token,HttpStatus.OK);
+        JwtToken jwtToken = new JwtToken();
+        jwtToken.setToken(token);
+        jwtToken.setType("JWT");
+        if(jwtToken != null){
+            return new ResponseEntity<>(jwtToken,HttpStatus.OK);
         }
         return new ResponseEntity<>("Invalid Credentials",HttpStatus.BAD_REQUEST);
     }
