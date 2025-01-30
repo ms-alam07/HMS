@@ -17,7 +17,7 @@ public class JWTService {
     @Value("${jwt.issuer}")
     private String issuer;
     @Value("${jwt.expiration.duration}")
-    private String expiry;
+    private Long expiry;
     private Algorithm algorithm;
 
 
@@ -26,8 +26,7 @@ public class JWTService {
         algorithm = Algorithm.HMAC256(algorithmKey); // HMAC throws UnsupportedEncodingException
     }
     public String genrateToken(String username) {
-        long expirationDuration = Long.parseLong(expiry);
-        Date expirationTime = new Date(System.currentTimeMillis() + expirationDuration);
+        Date expirationTime = new Date(System.currentTimeMillis() + expiry);
         return JWT.create()
                 .withClaim("name", username)
                 .withExpiresAt(expirationTime)  // Set correct expiration time
@@ -36,12 +35,18 @@ public class JWTService {
     }
 
     public String getUsername(String token) {
-        DecodedJWT decoded =JWT.require(algorithm)
-                .withIssuer(issuer)
-                .build()
-                .verify(token);
-        return decoded.getClaim("name").asString();
+        try {
+            DecodedJWT decoded = JWT.require(algorithm)
+                    .withIssuer(issuer)
+                    .build()
+                    .verify(token);
+            return decoded.getClaim("name").asString();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to decode or verify JWT: " + e.getMessage(), e);
+        }
     }
+
 
 
 }

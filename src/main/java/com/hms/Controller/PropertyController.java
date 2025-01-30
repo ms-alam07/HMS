@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/hms/property")
+@RequestMapping("api/hms/property")
 public class PropertyController {
 
     @PostMapping("/addProperty")

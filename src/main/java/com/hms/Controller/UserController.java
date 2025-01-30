@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-
-
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -29,7 +27,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto) {
         String token = userService.verifyLogin(loginDto);
         JwtToken jwtToken = new JwtToken();
