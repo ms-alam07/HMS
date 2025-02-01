@@ -25,7 +25,7 @@ public class JWTService {
     public void postConstruct() throws UnsupportedEncodingException {
         algorithm = Algorithm.HMAC256(algorithmKey); // HMAC throws UnsupportedEncodingException
     }
-    public String genrateToken(String username) {
+    public String generateToken(String username) {
         Date expirationTime = new Date(System.currentTimeMillis() + expiry);
         return JWT.create()
                 .withClaim("name", username)

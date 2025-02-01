@@ -42,8 +42,8 @@ public class PropertyService {
     public PropertyDto addProperty(PropertyDto dto) {
             Property property = mapToEntity(dto);
            Property pro = propertyRepository.save(property);
-           PropertyDto propertyDtoto = mapToDto(pro);
-           return propertyDtoto;
+           PropertyDto propertyDto = mapToDto(pro);
+           return propertyDto;
     }
 
     // Get all properties
