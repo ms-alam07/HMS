@@ -31,8 +31,12 @@ public class SecurityConfig {
 
                 // URLs without token will come here to permitAll()
                 .authorizeHttpRequests()
-                .requestMatchers("api/hms/user/signup","api/hms/user/login").permitAll()
-                .requestMatchers("api/hms/property/addProperty").hasRole("ADMIN").anyRequest().authenticated();
+
+                .requestMatchers("/api/hms/user/signup", "/api/hms/user/login", "/api/hms/user/property-owner/signup").permitAll()
+                .requestMatchers("api/hms/user/property-owner/addProperty").hasRole("PROPERTY_OWNER")
+                .requestMatchers("api/v1/user/deleteProperty").hasAnyRole("PROPERTY_OWNER","ADMIN")
+                .requestMatchers("api/v1/user/blog/signup").hasRole("ADMIN")
+                .anyRequest().authenticated();
         return http.build();
     }
 }

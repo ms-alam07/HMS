@@ -9,6 +9,18 @@ public class UserDto {
     private String mobile;
     private String password;
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    private String role;
+
+
+
     public String getPassword() {
         return password;
     }

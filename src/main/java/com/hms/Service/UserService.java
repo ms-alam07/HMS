@@ -30,7 +30,7 @@ public class UserService {
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setMobile(userDto.getMobile());
-        user.setPassword(BCrypt.hashpw(userDto.getPassword(),BCrypt.gensalt(10))); // Use BCryptPasswordEncoder
+        user.setPassword(BCrypt.hashpw(userDto.getPassword(),BCrypt.gensalt(10)));
         return user;
     }
     UserDto mapToDto(User user){
@@ -47,10 +47,30 @@ public class UserService {
     public UserDto addUser(UserDto userDto) {
         validateUser(userDto);
         User user = mapToEntity(userDto);
+        user.setRole("ROLE_USER");  // has to be written like this as ROLE_USER only or ROLE_ADMIN etc...
         User us = userRepository.save(user);
         UserDto userDto1 = mapToDto(us);
         return userDto1;
     }
+
+    public UserDto addPropertyOwner(UserDto userDto) {
+        validateUser(userDto);
+        User user = mapToEntity(userDto);
+        user.setRole("ROLE_OWNER");  // has to be written like this as ROLE_USER only or ROLE_ADMIN etc...
+        User us = userRepository.save(user);
+        UserDto userDto1 = mapToDto(us);
+        return userDto1;
+    }
+
+    public UserDto addBlogManagerAccount(UserDto userDto) {
+        validateUser(userDto);
+        User user = mapToEntity(userDto);
+        user.setRole("ROLE_BLOG-MANAGER");  // has to be written like this as ROLE_USER only or ROLE_ADMIN etc...
+        User us = userRepository.save(user);
+        UserDto userDto1 = mapToDto(us);
+        return userDto1;
+    }
+
     private void validateUser(UserDto userDto) {
         Optional<User> opUsername = userRepository.findByUsername(userDto.getUsername());
         if (opUsername.isPresent()) {
@@ -66,7 +86,6 @@ public class UserService {
         }
     }
 
-
     public String verifyLogin(LoginDto loginDto) {
         Optional<User> opUser = userRepository.findByUsername(loginDto.getUsername());
         if(opUser.isPresent()) {
@@ -78,6 +97,4 @@ public class UserService {
         }
          return null;
     }
-
-
 }

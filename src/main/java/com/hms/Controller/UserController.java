@@ -26,6 +26,25 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+    @PostMapping("/property-owner/signup")
+    public ResponseEntity<?> createPropertyOwner(@RequestBody UserDto userDto) {
+        try {
+            UserDto dto = userService.addPropertyOwner(userDto);
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/blog/signup")
+    public ResponseEntity<?> createBlogManager(@RequestBody UserDto userDto) {
+        try {
+            UserDto dto = userService.addBlogManagerAccount(userDto);
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto) {
