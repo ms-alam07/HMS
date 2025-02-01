@@ -34,16 +34,16 @@ public class SecurityConfig {
                 // Role-based Protected Endpoints
 
                 // Property Owner Endpoints
-                .requestMatchers("/api/hms/user/property-owner/signup").hasRole("PROPERTY_OWNER")
-                .requestMatchers("/api/hms/property/addProperty").hasRole("PROPERTY_OWNER")
-                .requestMatchers("/api/hms/property/updateProperty/**").hasRole("PROPERTY_OWNER")
-                .requestMatchers("/api/hms/property/deleteProperty/**").hasRole("PROPERTY_OWNER")
-                .requestMatchers("/api/hms/property/addPropertyPhotos").hasRole("PROPERTY_OWNER")
+                .requestMatchers("/api/hms/user/property-owner/signup").hasRole("OWNER")
+                .requestMatchers("/api/hms/property/addProperty").hasRole("OWNER")
+                .requestMatchers("/api/hms/property/updateProperty/**").hasRole("OWNER")
+                .requestMatchers("/api/hms/property/deleteProperty/**").hasRole("OWNER")
+                .requestMatchers("/api/hms/property/addPropertyPhotos").hasRole("OWNER")
 
                 // Admin Endpoints
                 .requestMatchers("/api/hms/user/blog/signup").hasRole("ADMIN")
-                .requestMatchers("/api/hms/property/updateProperty/**").hasAnyRole("PROPERTY_OWNER", "ADMIN")
-                .requestMatchers("/api/hms/property/deleteProperty/**").hasAnyRole("PROPERTY_OWNER", "ADMIN")
+                .requestMatchers("/api/hms/property/updateProperty/**").hasAnyRole("OWNER", "ADMIN")
+                .requestMatchers("/api/hms/property/deleteProperty/**").hasAnyRole("OWNER", "ADMIN")
                 .requestMatchers("/api/hms/country/**").hasRole("ADMIN")
                 .requestMatchers("/api/hms/city/**").hasRole("ADMIN")
                 .requestMatchers("/api/hms/areas/**").hasRole("ADMIN")
