@@ -1,11 +1,14 @@
 package com.hms.Controller;
 
+import com.hms.Entity.User;
 import com.hms.Payload.JwtToken;
 import com.hms.Payload.LoginDto;
+import com.hms.Payload.ProfileDto;
 import com.hms.Payload.UserDto;
 import com.hms.Service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -104,5 +107,14 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<ProfileDto> getProfile(@AuthenticationPrincipal User user){
+        ProfileDto profileDto = new ProfileDto();
+        profileDto.setName(user.getName());
+        profileDto.setEmail(user.getEmail());
+        profileDto.setUsername(user.getUsername());
+         return new ResponseEntity<>(profileDto, HttpStatus.OK);
     }
 }

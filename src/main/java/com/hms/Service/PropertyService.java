@@ -3,6 +3,7 @@ package com.hms.Service;
 import com.hms.Entity.Property;
 import com.hms.Entity.User;
 import com.hms.Payload.PropertyDto;
+import com.hms.Payload.ReviewDto;
 import com.hms.Payload.UserDto;
 import com.hms.Repository.PropertyRepository;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -84,4 +85,6 @@ public class PropertyService {
         }
         return false; // Property not found
     }
+
+
 }
