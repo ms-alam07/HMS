@@ -99,7 +99,7 @@ public class UserController {
     }
 
     // Get all users
-    @GetMapping("/")
+    @GetMapping("/all-users")
     public ResponseEntity<?> getAllUsers() {
         try {
             Iterable<UserDto> users = userService.getAllUsers();

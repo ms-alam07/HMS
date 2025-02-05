@@ -6,6 +6,7 @@ import com.hms.Service.ReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -20,8 +21,8 @@ public class ReviewController {
 
     @PostMapping
     public ResponseEntity<ReviewDto> addReview(@RequestBody ReviewDto dto, @RequestParam long propertyId,
-                                               @AuthenticationPrincipal Long userId) {
-        return ResponseEntity.ok(reviewService.addReview(dto, propertyId, userId));
+                                               @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(reviewService.addReview(dto, propertyId, user));
     }
 
     @GetMapping("/{propertyId}")
