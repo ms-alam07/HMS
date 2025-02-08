@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("api/hms/image")
 public class ImageController {
@@ -19,10 +21,16 @@ public class ImageController {
 
 
     @PostMapping(path = "/upload/file/{myhmsaws}/property/{propertyId}")
-    public ResponseEntity<?> uploadFile(@RequestParam MultipartFile file,
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
                                         @PathVariable String myhmsaws,
-                                        @PathVariable Long propertyId) {
-        String imageUrl = bucketService.upload(file, myhmsaws);
+                                        @PathVariable Long propertyId,
+                                        @RequestHeader Map<String, String> headers) {
+
+        headers.forEach((key, value) -> System.out.println(key + ": " + value)); // Debug headers
+
+        String imageUrl = bucketService.upload(file, myhmsaws, propertyId);
         return new ResponseEntity<>(imageUrl, HttpStatus.CREATED);
     }
+
+
 }

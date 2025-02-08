@@ -1,41 +1,48 @@
 package com.hms.Service;
 
-import com.amazonaws.services.s3.AmazonS3;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+import software.amazon.awssdk.core.sync.RequestBody;
 
-import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 @Service
 public class BucketService {
 
-    @Autowired
-    public AmazonS3 amazonS3;
+    private final S3Client s3Client;
 
-    public String upload(MultipartFile file, String myhmsaws) {
+    public BucketService(S3Client s3Client)
+    {
+        this.s3Client = s3Client;
+    }
+
+    public String upload(MultipartFile file, String myhmsaws, Long propertyId) {
         if (file.isEmpty()) {
             throw new RuntimeException("Please select a file to upload");
         }
 
-        File conyFile = null;
+        // Generate unique file name inside a property-specific folder
+        String fileName = "property_" + propertyId + "/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
+
         try {
-            // Create a temporary file with the original file name
-            conyFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
-            file.transferTo(conyFile);   // Uploading the file to conyFile from MultipartFile
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(myhmsaws)
+                    .key(fileName)
+                    .contentType(file.getContentType())
+                    .build();
 
-            // Upload the file to S3
-            amazonS3.putObject(myhmsaws, conyFile.getName(), conyFile);
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
 
-            // Return the URL of the uploaded file
-            return amazonS3.getUrl(myhmsaws, conyFile.getName()).toString();
-        } catch (Exception e) {
-            throw new RuntimeException("Error uploading the file: " + e.getMessage());
-        } finally {
-            // Clean up: Delete the temporary file after upload
-            if (conyFile != null && conyFile.exists()) {
-                conyFile.delete();
-            }
+            // Return S3 URL
+            return "https://" + myhmsaws + ".s3.amazonaws.com/" + fileName;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error uploading the file: " + e.getMessage(), e);
         }
     }
+
 }
